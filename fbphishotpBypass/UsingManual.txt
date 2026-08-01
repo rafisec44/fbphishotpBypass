@@ -1,0 +1,11 @@
+1 :   sudo apt update
+
+2 :   pip install -r requirements.txt
+
+3:   python3 app.py
+
+4 :   wget https://github.com/cloudflare/cloudflared/releases/latest/download/cloudflared-linux-amd64
+      chmod +x cloudflared-linux-amd64
+      sudo mv cloudflared-linux-amd64 /usr/local/bin/cloudflared
+
+5 :   ~/cloudflared-linux-amd64 tunnel --protocol http2 --url http://127.0.0.1:5000

